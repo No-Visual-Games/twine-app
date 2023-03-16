@@ -15,6 +15,7 @@ import {GoToPassageButton} from './go-to-passage-button';
 import {SelectAllPassagesButton} from './select-all-passages-button';
 import {StartAtPassageButton} from './start-at-passage-button';
 import {TestPassageButton} from './test-passage-button';
+import {DuplicatePassageButton} from "./duplicate-passage-button";
 
 export interface PassageActionsProps {
 	getCenter: () => Point;
@@ -61,6 +62,7 @@ export const PassageActions: React.FC<PassageActionsProps> = props => {
 			<StartAtPassageButton passage={soloSelectedPassage} story={story} />
 			<GoToPassageButton onOpenFuzzyFinder={onOpenFuzzyFinder} />
 			<SelectAllPassagesButton story={story} />
+			<DuplicatePassageButton story={story} passage={soloSelectedPassage} />
 		</ButtonBar>
 	);
 };

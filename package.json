@@ -33,9 +33,9 @@
 		"lodash": "^4.17.21",
 		"mkdir-promise": "^1.0.0",
 		"node-fetch": "^2.6.7",
-		"react": "^16.14.0",
+		"react": "16.14.0",
 		"react-codemirror2": "^7.2.1",
-		"react-dom": "^16.14.0",
+		"react-dom": "16.14.0",
 		"react-draggable": "^4.4.3",
 		"react-helmet": "^6.1.0",
 		"react-hook-thunk-reducer": "^0.2.4",
@@ -84,6 +84,7 @@
 		"@types/ua-parser-js": "^0.7.36",
 		"cpy": "^8.1.2",
 		"cpy-cli": "^3.1.1",
+		"cross-env": "^7.0.3",
 		"cross-var": "^1.1.0",
 		"electron": "^18.3.6",
 		"electron-builder": "^23.3.3",
@@ -103,7 +104,7 @@
 		"build": "run-s clean build:web build:electron",
 		"build:analyze": "source-map-explorer 'dist/web/static/js/*.js'",
 		"build:docs": "cd docs/en && mdbook build",
-		"build:web": "BUILD_PATH=dist/web react-scripts build",
+		"build:web": "cross-env BUILD_PATH=dist/web react-scripts --openssl-legacy-provider build",
 		"postbuild:web": "cpy --cwd dist/web --parents . ../../electron-build/renderer; cd dist && cross-var zip -r twine-$npm_package_version-web.zip web && cd ..",
 		"build:electron": "npm-run-all --parallel build:web build:electron-main --serial build:electron-bundle",
 		"build:electron-main": "tsc --project tsconfig.electron.json",
@@ -111,12 +112,13 @@
 		"clean": "rimraf dist electron-build",
 		"e2e": "playwright test",
 		"lint": "eslint src",
-		"start": "react-scripts start",
+		"start": "react-scripts --openssl-legacy-provider start",
 		"start:docs": "cd docs/en && mdbook serve",
-		"start:electron": "NODE_ENV=development npm-run-all --serial clean --parallel build:web build:electron-main --serial start:electron:boot",
+		"start:electron": "cross-env NODE_ENV=development npm-run-all --serial clean --parallel build:web build:electron-main --serial start:electron:boot",
 		"start:electron:boot": "electron electron-build/main/src/electron/main-process/index.js",
 		"test": "react-scripts test",
-		"test:coverage": "react-scripts test --coverage"
+		"test:coverage": "react-scripts test --coverage",
+		"preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions"
 	},
 	"eslintConfig": {
 		"extends": [
@@ -145,6 +147,10 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
+	},
+	"resolutions": {
+		"@types/react": "16.14.0",
+		"@types/react-dom": "16.14.0"
 	},
 	"homepage": "./",
 	"main": "electron-build/electron/src/electron/main-process/index.js"

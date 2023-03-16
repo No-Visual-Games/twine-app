@@ -268,7 +268,9 @@
 			"speech": "Speech",
 			"troubleshooting": "Troubleshooting",
 			"twineHelp": "Twine Help",
-			"view": "View"
+			"view": "View",
+			"settings": "Settings",
+			"selectStorySaveDirectory": "Save directory"
 		},
 		"storiesDirectoryName": "Stories",
 		"updateCheck": {

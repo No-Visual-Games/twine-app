@@ -72,7 +72,7 @@ export const AddStoryFormatButton: React.FC<AddStoryFormatButtonProps> = props =
 				}),
 				valid: true
 			};
-		} catch (error) {
+		} catch (error: any) {
 			return {
 				message: t('components.addStoryFormatButton.fetchError', {
 					errorMessage: error.message

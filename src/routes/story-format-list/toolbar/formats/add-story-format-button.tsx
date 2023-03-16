@@ -81,7 +81,7 @@ export const AddStoryFormatButton: React.FC = () => {
 				),
 				valid: true
 			};
-		} catch (error) {
+		} catch (error: any) {
 			return {
 				message: t(
 					'routes.storyFormatList.toolbar.addStoryFormatButton.fetchError',

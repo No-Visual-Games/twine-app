@@ -44,7 +44,7 @@ export const StoryFormatsContextProvider: React.FC = props => {
 
 			try {
 				storyFormats.saveMiddleware(newState, action);
-			} catch (error) {
+			} catch (error: any) {
 				reportError(error, 'store.errors.cantPersistStoryFormats');
 			}
 			return newState;

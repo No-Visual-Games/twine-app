@@ -26,7 +26,7 @@ export const PrefsContextProvider: React.FC = props => {
 
 			try {
 				prefs.saveMiddleware(newState, action);
-			} catch (error) {
+			} catch (error: any) {
 				reportError(error, 'store.errors.cantPersistPrefs');
 			}
 

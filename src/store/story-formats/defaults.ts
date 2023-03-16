@@ -44,5 +44,10 @@ export const builtins = () => [
 		name: 'SugarCube',
 		url: 'story-formats/sugarcube-2.36.1/format.js',
 		version: '2.36.1'
+	},
+	{
+		name: 'Twison',
+		url: 'story-formats/twison-1.0.0/format.js',
+		version: '1.0.0'
 	}
 ];

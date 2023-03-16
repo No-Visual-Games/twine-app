@@ -263,7 +263,9 @@
 			"speech": "Discours",
 			"troubleshooting": "Résolution de problèmes",
 			"twineHelp": "Aide Twine",
-			"view": "Afficher"
+			"view": "Afficher",
+			"settings": "Paramètres",
+			"selectStorySaveDirectory": "Dossier de sauvegarde"
 		},
 		"storiesDirectoryName": "Histoires",
 		"updateCheck": {

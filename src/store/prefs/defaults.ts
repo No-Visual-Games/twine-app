@@ -31,5 +31,6 @@ export const defaults = (): PrefsState => ({
 	storyListSort: 'name',
 	storyListTagFilter: [],
 	storyTagColors: {},
+	storySaveDirectory: '',
 	welcomeSeen: false
 });

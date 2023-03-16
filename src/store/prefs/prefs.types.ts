@@ -102,6 +102,9 @@ export interface PrefsState {
 	 * logical OR, and an empty array equates to showing all stories.
 	 */
 	storyListTagFilter: string[];
+	
+	storySaveDirectory: string
+	
 	/**
 	 * Colors for story tags.
 	 */

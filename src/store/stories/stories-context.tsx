@@ -32,7 +32,7 @@ export const StoriesContextProvider: React.FC = props => {
 
 			try {
 				storiesPersistence.saveMiddleware(newState, action, formats);
-			} catch (error) {
+			} catch (error: any) {
 				reportError(error, 'store.errors.cantPersistStories');
 			}
 

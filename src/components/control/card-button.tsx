@@ -50,6 +50,7 @@ export const CardButton: React.FC<CardButtonProps> = props => {
 				timeout={200}
 				unmountOnExit
 			>
+				{/* @ts-ignore */ }
 				<FocusTrap
 					focusTrapOptions={{
 						clickOutsideDeactivates: true,
