@@ -1,0 +1,35 @@
+@import '../../styles/colors.css';
+@import '../../styles/depth.css';
+@import '../../styles/metrics.css';
+@import '../../styles/typography.css';
+
+.app-prefs-dialog div.pick-directory {
+    grid-column: 1 / span 2;
+}
+
+.pick-directory {
+    align-items: center;
+    display: inline-flex;
+    position: relative;
+}
+
+.pick-directory > .text-input {
+    display: flex;
+}
+
+.pick-directory > .text-input > label {
+    flex: 1;
+}
+
+.pick-directory > .text-input input {
+    padding-right: 45px;
+}
+
+.pick-directory > svg {
+    position: absolute;
+    right: 15px;
+}
+
+.pick-directory > svg:hover {
+    cursor: pointer;
+}

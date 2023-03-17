@@ -9,6 +9,7 @@ export interface TextInputProps {
 	orientation?: 'horizontal' | 'vertical';
 	placeholder?: string;
 	type?: 'search' | 'text';
+	readOnly?: boolean;
 	value: string;
 }
 
@@ -31,6 +32,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
 						ref={ref}
 						type={props.type ?? 'text'}
 						value={props.value}
+						readOnly={props.readOnly}
 					/>
 				</label>
 			</span>

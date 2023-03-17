@@ -2,14 +2,14 @@ import {TwineElectronWindow} from '../../../../electron/shared';
 import {Story} from '../../../stories/stories.types';
 import {importStories} from '../../../../util/import';
 
-export async function load(): Promise<Story[]> {
+export async function load(saveDirectory?: string): Promise<Story[]> {
 	const {twineElectron} = window as TwineElectronWindow;
 
 	if (!twineElectron) {
 		throw new Error('Electron bridge is not present on window.');
 	}
 
-	const stories = await twineElectron?.ipcRenderer.invoke('load-stories');
+	const stories = await twineElectron?.ipcRenderer.invoke('load-stories', saveDirectory);
 
 	if (stories && Array.isArray(stories)) {
 		return stories.reduce((result, file) => {

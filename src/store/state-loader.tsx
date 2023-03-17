@@ -30,7 +30,7 @@ export const StateLoader: React.FC = ({children}) => {
 			if (!initing) {
 				const formatsState = await storyFormats.load();
 				const prefsState = await prefs.load();
-				const storiesState = await stories.load();
+				const storiesState = await stories.load(prefsState.storySaveDirectory);
 
 				formatsDispatch({type: 'init', state: formatsState});
 				prefsDispatch({type: 'init', state: prefsState});

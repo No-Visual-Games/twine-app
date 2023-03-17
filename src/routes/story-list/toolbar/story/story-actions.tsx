@@ -7,6 +7,7 @@ import {DeleteStoryButton} from './delete-story-button';
 import {DuplicateStoryButton} from './duplicate-story-button';
 import {EditStoryButton} from './edit-story-button';
 import {TagStoryButton} from './tag-story-button';
+import {GlobalPassageTagsButton} from "./global-passage-tags-button";
 
 export interface StoryActionsProps {
 	selectedStory?: Story;
@@ -19,6 +20,7 @@ export const StoryActions: React.FC<StoryActionsProps> = props => {
 	return (
 		<ButtonBar>
 			<CreateStoryButton />
+			<GlobalPassageTagsButton />
 			<EditStoryButton story={selectedStory} />
 			<TagStoryButton story={selectedStory} />
 			<RenameStoryButton

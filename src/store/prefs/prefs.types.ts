@@ -102,8 +102,20 @@ export interface PrefsState {
 	 * logical OR, and an empty array equates to showing all stories.
 	 */
 	storyListTagFilter: string[];
-	
+	/**
+	 * Where to save the stories
+	 */
 	storySaveDirectory: string
+
+	/**
+	 * Passage tags that are available on all stories
+	 */
+	globalPassageTags: string[]
+
+	/**
+	 * Color for global passage tags
+	 */
+	globalPassageTagsColors: Record<string, Color>;
 	
 	/**
 	 * Colors for story tags.

@@ -1,0 +1,6 @@
+@import '../styles/accessibility.css';
+@import '../styles/metrics.css';
+
+.global-passage-tags-dialog .tag-editor {
+	grid-template-columns: repeat(4, min-content);
+}

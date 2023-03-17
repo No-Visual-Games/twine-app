@@ -18,6 +18,7 @@ import {
 } from '../../store/stories';
 import {useUndoableStoriesContext} from '../../store/undoable-stories';
 import {Color} from '../../util/color';
+import {usePrefsContext} from "../../store/prefs";
 
 export interface PassageToolbarProps {
 	disabled?: boolean;
@@ -29,6 +30,7 @@ export interface PassageToolbarProps {
 export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 	const {disabled, editor, passage, story} = props;
 	const {dispatch} = useUndoableStoriesContext();
+	const {prefs} = usePrefsContext()
 	const {t} = useTranslation();
 
 	function handleAddTag(name: string, color?: Color) {
@@ -71,7 +73,7 @@ export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 			<AddTagButton
 				disabled={disabled}
 				assignedTags={passage.tags}
-				existingTags={storyPassageTags(story)}
+				existingTags={Array.from(new Set([...prefs.globalPassageTags, ...storyPassageTags(story)]))}
 				onAdd={handleAddTag}
 			/>
 			<MenuButton

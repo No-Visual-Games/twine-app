@@ -7,11 +7,11 @@ import {FontSelect} from '../components/control/font-select';
 import {TextSelect} from '../components/control/text-select';
 import {setPref, usePrefsContext} from '../store/prefs';
 import {closestAppLocale, locales} from '../util/locales';
+import {isElectronRenderer} from '../util/is-electron';
+import {PickDirectory} from "../components/control/pick-directory";
 import './app-prefs.css';
 
-export const AppPrefsDialog: React.FC<
-	Omit<DialogCardProps, 'headerLabel'>
-> = props => {
+export const AppPrefsDialog: React.FC<Omit<DialogCardProps, 'headerLabel'>> = props => {
 	const {dispatch, prefs} = usePrefsContext();
 	const {t} = useTranslation();
 
@@ -89,6 +89,12 @@ export const AppPrefsDialog: React.FC<
 					}
 					scaleLabel={t('dialogs.appPrefs.codeEditorFontScale')}
 				/>
+				{isElectronRenderer() &&
+					<PickDirectory value={prefs.storySaveDirectory}
+								   onChange={directory => dispatch(setPref('storySaveDirectory', directory))}>
+						{t('dialogs.appPrefs.saveDirectory')}
+					</PickDirectory>
+				}
 			</CardContent>
 		</DialogCard>
 	);

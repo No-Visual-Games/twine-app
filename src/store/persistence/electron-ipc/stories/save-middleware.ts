@@ -27,7 +27,8 @@ let lastState: StoriesState;
 export function saveMiddleware(
 	state: StoriesState,
 	action: StoriesAction,
-	formats: StoryFormatsState
+	formats: StoryFormatsState,
+	saveDirectory: string
 ) {
 	const {twineElectron} = window as TwineElectronWindow;
 
@@ -48,7 +49,7 @@ export function saveMiddleware(
 				throw new Error('Passage was created but with no name specified');
 			}
 
-			saveStory(storyWithName(state, action.props.name), formats);
+			saveStory(storyWithName(state, action.props.name), formats, saveDirectory);
 			break;
 
 		case 'deleteStory': {
@@ -76,13 +77,13 @@ export function saveMiddleware(
 					// multiple renames in one session will cause mayhem.
 
 					twineElectron.ipcRenderer.once('story-renamed', () =>
-						saveStory(newStory, formats)
+						saveStory(newStory, formats, saveDirectory)
 					);
 					twineElectron.ipcRenderer.send('rename-story', oldStory, newStory);
 				} else {
 					// An ordinary update.
 
-					saveStory(storyWithId(state, action.storyId), formats);
+					saveStory(storyWithId(state, action.storyId), formats, saveDirectory);
 				}
 			}
 			break;
@@ -91,13 +92,13 @@ export function saveMiddleware(
 		case 'createPassages':
 		case 'deletePassage':
 		case 'deletePassages':
-			saveStory(storyWithId(state, action.storyId), formats);
+			saveStory(storyWithId(state, action.storyId), formats, saveDirectory);
 			break;
 
 		case 'updatePassage':
 			// Skip updates that wouldn't be saved.
 			if (isPersistablePassageChange(action.props)) {
-				saveStory(storyWithId(state, action.storyId), formats);
+				saveStory(storyWithId(state, action.storyId), formats, saveDirectory);
 			}
 			break;
 
@@ -108,7 +109,7 @@ export function saveMiddleware(
 					isPersistablePassageChange(action.passageUpdates[passageId])
 				)
 			) {
-				saveStory(storyWithId(state, action.storyId), formats);
+				saveStory(storyWithId(state, action.storyId), formats, saveDirectory);
 			}
 			break;
 

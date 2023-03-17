@@ -11,13 +11,15 @@ import {fetchStoryFormatProperties} from '../../../../util/story-format/fetch-pr
 /**
  * Sends an IPC message to save a story to disk, ideally in published form.
  */
-export async function saveStory(story: Story, formats: StoryFormatsState) {
+export async function saveStory(story: Story, formats: StoryFormatsState, storySaveDirectory: string = "") {
 	const {twineElectron} = window as TwineElectronWindow;
 
 	if (!twineElectron) {
 		throw new Error('Electron bridge is not present on window.');
 	}
 
+	console.log("Saving story to directory", storySaveDirectory)
+	
 	try {
 		const format = formatWithNameAndVersion(
 			formats,
@@ -31,7 +33,8 @@ export async function saveStory(story: Story, formats: StoryFormatsState) {
 				story,
 				publishStoryWithFormat(story, format.properties.source, getAppInfo(), {
 					startOptional: true
-				})
+				}),
+				storySaveDirectory
 			);
 		} else {
 			const {source} = await fetchStoryFormatProperties(format.url);
@@ -41,7 +44,8 @@ export async function saveStory(story: Story, formats: StoryFormatsState) {
 				story,
 				publishStoryWithFormat(story, source, getAppInfo(), {
 					startOptional: true
-				})
+				}),
+				storySaveDirectory
 			);
 		}
 	} catch (error: any) {
@@ -51,7 +55,8 @@ export async function saveStory(story: Story, formats: StoryFormatsState) {
 		twineElectron.ipcRenderer.send(
 			'save-story-html',
 			story,
-			publishStory(story, getAppInfo(), {startOptional: true})
+			publishStory(story, getAppInfo(), {startOptional: true}),
+			storySaveDirectory
 		);
 	}
 }

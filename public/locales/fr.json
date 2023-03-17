@@ -165,7 +165,8 @@
 			"themeDark": "Sombre",
 			"themeSystem": "Système",
 			"theme": "Thème",
-			"title": "Préférences"
+			"title": "Préférences",
+			"saveDirectory": "Dossier de sauvegarde des histoires"
 		},
 		"passageEdit": {
 			"editorCrashed": "Un problème est survenu avec cet éditeur. Essayez de le fermer et d'éditeur à nouveau ce passage.",
@@ -210,10 +211,11 @@
 			"explanation": "Tout CSS ajouté ici remplacera l'apparence par défaut de votre histoire"
 		},
 		"storyTags": {
+			"noGlobalTags": "Aucune balise globale de passage n'a été ajoutée",
 			"noTags": "Aucune balise n'a été ajoutée à votre histoire.",
-			"title": "Balises de l'histoire"
+			"title": "Balises de l'histoire",
+			"globalTagsTitle": "Balises globale de passage"
 		},
-
 		"storyImport": {
 			"deselectAll": "Désélectionner tout",
 			"filePrompt": "Pour importer une histoire dans Twine, téléchargez une archive ou une histoire publiée.",
@@ -361,7 +363,9 @@
 				"sort": "Trier par",
 				"sortByDate": "Dernière modification",
 				"sortByName": "Titre",
-				"storyTags": "Balises de l'histoire"
+				"storyTags": "Balises de l'histoire",
+				"settings": "Paramètres",
+				"globalPassageTags": "Tags de passage global"
 			}
 		},
 		"welcome": {

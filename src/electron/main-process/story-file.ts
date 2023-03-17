@@ -28,8 +28,8 @@ export interface StoryFile {
  * Returns a promise resolving to an array of HTML strings to load from the
  * story directory. Each string corresponds to an individual story.
  */
-export async function loadStories() {
-	const storyPath = storyDirectoryPath();
+export async function loadStories(saveDirectory?: string) {
+	const storyPath = !saveDirectory || !saveDirectory.length ? storyDirectoryPath() : saveDirectory;
 	const result: StoryFile[] = [];
 	const files = await readdir(storyPath);
 
@@ -57,11 +57,16 @@ export async function loadStories() {
  * Saves story HTML to the file system. This returns a promise that resolves
  * when complete.
  */
-export async function saveStoryHtml(story: Story, storyHtml: string) {
+export async function saveStoryHtml(story: Story, storyHtml: string, storyDirectory: string = "") {
 	// We save to a temp file first, then overwrite the existing if that succeeds,
 	// so that if any step fails, the original file is left intact.
 
-	const savedFilePath = join(storyDirectoryPath(), storyFileName(story));
+	// if no path is given, use default path
+	if (!storyDirectory || !storyDirectory.length) {
+		storyDirectory = storyDirectoryPath();
+	}
+	
+	const savedFilePath = join(storyDirectory, storyFileName(story));
 
 	console.log(`Saving ${savedFilePath}`);
 

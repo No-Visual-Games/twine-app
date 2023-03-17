@@ -1,11 +1,12 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import classNames from 'classnames';
-import {IconWriting} from '@tabler/icons';
+import {IconWriting, IconTrash} from '@tabler/icons';
 import {colors, Color} from '../../util/color';
 import {PromptButton, PromptValidationResponse} from '../control/prompt-button';
 import {TextSelect} from '../control/text-select';
 import './tag-editor.css';
+import {IconButton} from "../control/icon-button";
 
 export interface TagEditorProps {
 	allTags: string[];
@@ -13,10 +14,12 @@ export interface TagEditorProps {
 	name: string;
 	onChangeColor: (color: Color) => void;
 	onChangeName: (name: string) => void;
+	onRemove?: (name: string) => void;
+	allowRemove?: boolean;
 }
 
 export const TagEditor: React.FC<TagEditorProps> = props => {
-	const {allTags, color, name, onChangeColor, onChangeName} = props;
+	const {allTags, color, name, allowRemove, onChangeColor, onChangeName, onRemove} = props;
 	const [newName, setNewName] = React.useState(name);
 	const {t} = useTranslation();
 
@@ -52,6 +55,13 @@ export const TagEditor: React.FC<TagEditorProps> = props => {
 			>
 				{t('common.color')}
 			</TextSelect>
+			{allowRemove && <IconButton icon={<IconTrash />}
+						label={t('common.remove')}
+						onClick={() => {
+							if (onRemove) {
+								onRemove(name)
+							}}}
+			/>}
 		</div>
 	);
 };

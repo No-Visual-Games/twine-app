@@ -176,7 +176,8 @@
 			"themeDark": "Dark",
 			"themeSystem": "System",
 			"theme": "Theme",
-			"title": "Preferences"
+			"title": "Preferences",
+			"saveDirectory": "Story save directory"
 		},
 		"passageEdit": {
 			"editorCrashed": "Something went wrong with this editor. Try closing it and editing this passage again.",
@@ -242,8 +243,10 @@
 			"explanation": "CSS entered here will override the default appearance of your story."
 		},
 		"storyTags": {
+			"noGlobalTags": "No global passage tags have been added",
 			"noTags": "No tags have been added to your stories.",
-			"title": "Story Tags"
+			"title": "Story Tags",
+			"globalTagsTitle": "Global passage tags"
 		}
 	},
 	"electron": {
@@ -358,7 +361,9 @@
 				"sort": "Sort By",
 				"sortByDate": "Last Updated",
 				"sortByName": "Name",
-				"storyTags": "Story Tags"
+				"storyTags": "Story Tags",
+				"settings": "Settings",
+				"globalPassageTags": "Global passage tags"
 			}
 		},
 		"welcome": {

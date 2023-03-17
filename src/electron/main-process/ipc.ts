@@ -1,4 +1,4 @@
-import {app, dialog, ipcMain} from 'electron';
+import {app, dialog, ipcMain, BrowserWindow} from 'electron';
 import {debounce, DebouncedFunc} from 'lodash';
 import {i18n} from './locales';
 import {saveJsonFile} from './json-file';
@@ -53,7 +53,9 @@ export function initIpc() {
 		}
 	});
 
-	ipcMain.handle('load-stories', loadStories);
+	ipcMain.handle('load-stories', async (event, saveDirectory?: string) => {
+		return await loadStories(saveDirectory);
+	});
 
 	ipcMain.handle('load-story-formats', async () => {
 		try {
@@ -64,6 +66,14 @@ export function initIpc() {
 			);
 			return [];
 		}
+	});
+
+	ipcMain.handle('choose-directory', async () => {
+		const dialogValue = await dialog.showOpenDialog(BrowserWindow.getAllWindows()[0], {
+			properties: ['openDirectory']
+		})
+		
+		return dialogValue.filePaths;
 	});
 
 	ipcMain.on('open-with-temp-file', (event, data: string, suffix: string) =>
@@ -98,7 +108,7 @@ export function initIpc() {
 		}
 	});
 
-	ipcMain.on('save-story-html', async (event, story, storyHtml) => {
+	ipcMain.on('save-story-html', async (event, story, storyHtml, saveDirectory) => {
 		try {
 			if (typeof storyHtml !== 'string') {
 				throw new Error('Asked to save non-string as story HTML');
@@ -116,7 +126,7 @@ export function initIpc() {
 						saverStoryHtml: string
 					) => {
 						try {
-							await saveStoryHtml(saverStory, saverStoryHtml);
+							await saveStoryHtml(saverStory, saverStoryHtml, saveDirectory);
 							saverEvent.sender.send('story-html-saved', saverStory);
 						} catch (error) {
 							dialog.showErrorBox(

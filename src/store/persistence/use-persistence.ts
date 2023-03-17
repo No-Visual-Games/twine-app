@@ -12,11 +12,12 @@ export interface PersistenceHooks {
 		saveMiddleware: (state: PrefsState, action: PrefsAction) => void;
 	};
 	stories: {
-		load: () => Promise<StoriesState>;
+		load: (saveDirectory?: string) => Promise<StoriesState>;
 		saveMiddleware: (
 			state: StoriesState,
 			action: StoriesAction,
-			formats: StoryFormatsState
+			formats: StoryFormatsState,
+			saveDirectory: string
 		) => void;
 	};
 	storyFormats: {
