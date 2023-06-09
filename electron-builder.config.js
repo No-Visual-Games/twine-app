@@ -61,6 +61,11 @@ module.exports = {
 	extraMetadata: {
 		main: 'electron-build/main/src/electron/main-process/index.js'
 	},
+	fileAssociations: [
+		{
+			ext: "twine",
+		}	
+	],
 	files: ['electron-build/**/*', 'node_modules/**/*'],
 	linux: {
 		artifactName: `Twine-${pkg.version}-Linux-\${arch}.zip`,

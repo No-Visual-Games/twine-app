@@ -6,123 +6,137 @@ import {CardContent} from '../container/card';
 import {CardButton, CardButtonProps} from './card-button';
 import {IconButton, IconButtonProps} from './icon-button';
 import {TextInput} from './text-input';
+import "./prompt-button.css";
 
 export interface PromptValidationResponse {
-	message?: string;
-	valid: boolean;
+    message?: string;
+    valid: boolean;
 }
 
 export type PromptButtonValidator = (
-	value: string
+    value: string
 ) => PromptValidationResponse | Promise<PromptValidationResponse>;
 
+export interface PromptButtonField {
+    name: string,
+    label: string,
+	value: string,
+}
+
 export interface PromptButtonProps
-	extends Omit<CardButtonProps, 'ariaLabel' | 'onChangeOpen' | 'open'> {
-	cancelIcon?: React.ReactNode;
-	cancelLabel?: string;
-	onChange: React.ChangeEventHandler<HTMLInputElement>;
-	onSubmit: (value: string) => void;
-	prompt: string;
-	submitIcon?: React.ReactNode;
-	submitLabel?: string;
-	submitVariant?: IconButtonProps['variant'];
-	validate?: PromptButtonValidator;
-	value: string;
+    extends Omit<CardButtonProps, 'ariaLabel' | 'onChangeOpen' | 'open'> {
+    cancelIcon?: React.ReactNode;
+    cancelLabel?: string;
+    onChange: React.ChangeEventHandler<HTMLInputElement>;
+    onSubmit: (value: string) => void;
+    prompt: string;
+    submitIcon?: React.ReactNode;
+    submitLabel?: string;
+    submitVariant?: IconButtonProps['variant'];
+    validate?: PromptButtonValidator;
+    fields?: PromptButtonField[]
+    value: string;
 }
 
 export const PromptButton: React.FC<PromptButtonProps> = props => {
-	const {
-		cancelIcon,
-		cancelLabel,
-		onChange,
-		onSubmit,
-		prompt,
-		submitIcon,
-		submitLabel,
-		submitVariant,
-		validate,
-		value,
-		...other
-	} = props;
-	const mounted = React.useRef(true);
-	const [open, setOpen] = React.useState(false);
-	const [validation, setValidation] =
-		React.useState<PromptValidationResponse>();
-	const {t} = useTranslation();
+    const {
+        cancelIcon,
+        cancelLabel,
+        onChange,
+        onSubmit,
+        prompt,
+        submitIcon,
+        submitLabel,
+        submitVariant,
+        validate,
+        value,
+        fields,
+        ...other
+    } = props;
+    const mounted = React.useRef(true);
+    const [open, setOpen] = React.useState(false);
+    const [validation, setValidation] =
+        React.useState<PromptValidationResponse>();
+    const {t} = useTranslation();
 
-	React.useEffect(() => {
-		async function updateValidation() {
-			if (validate) {
-				const validation = await validate(value);
+    React.useEffect(() => {
+        async function updateValidation() {
+            if (validate) {
+                const validation = await validate(value);
 
-				if (mounted.current) {
-					setValidation(validation);
-				}
-			} else {
-				if (mounted.current) {
-					setValidation({valid: true});
-				}
-			}
-		}
+                if (mounted.current) {
+                    setValidation(validation);
+                }
+            } else {
+                if (mounted.current) {
+                    setValidation({valid: true});
+                }
+            }
+        }
 
-		updateValidation();
-	}, [validate, value]);
+        updateValidation();
+    }, [validate, value]);
 
-	React.useEffect(() => {
-		return () => {
-			mounted.current = false;
-		};
-	}, []);
+    React.useEffect(() => {
+        return () => {
+            mounted.current = false;
+        };
+    }, []);
 
-	function handleCancel(event: React.MouseEvent) {
-		event.preventDefault();
-		setOpen(false);
-	}
+    function handleCancel(event: React.MouseEvent) {
+        event.preventDefault();
+        setOpen(false);
+    }
 
-	function handleSubmit(event: React.FormEvent) {
-		event.preventDefault();
+    function handleSubmit(event: React.FormEvent) {
+        event.preventDefault();
 
-		// It's possible to submit with the Enter key and bypass us disabling the
-		// submit button, so we need to catch that here.
+        // It's possible to submit with the Enter key and bypass us disabling the
+        // submit button, so we need to catch that here.
 
-		if (validation?.valid) {
-			onSubmit(value);
-			setOpen(false);
-		}
-	}
+        if (validation?.valid) {
+            onSubmit(value);
+            setOpen(false);
+        }
+    }
 
-	return (
-		<span className="prompt-button">
+    return (
+        <span className="prompt-button">
 			<CardButton
-				ariaLabel={prompt}
-				onChangeOpen={setOpen}
-				open={open}
-				{...other}
-			>
+                ariaLabel={prompt}
+                onChangeOpen={setOpen}
+                open={open}
+                {...other}
+            >
 				<form onSubmit={handleSubmit}>
 					<CardContent>
 						<TextInput onChange={onChange} orientation="vertical" value={value}>
 							{prompt}
 						</TextInput>
+						{fields && fields.map(f => (
+							<TextInput name={f.name} onChange={onChange} orientation="vertical" value={f.value}>
+								{f.label}
+							</TextInput>
+						))}
 						{validation?.message && <p>{validation.message}</p>}
 					</CardContent>
 					<ButtonBar>
 						<IconButton
-							buttonType="submit"
-							disabled={!validation?.valid}
-							icon={submitIcon ?? <IconCheck />}
-							label={submitLabel ?? t('common.ok')}
-							variant={submitVariant ?? 'primary'}
-						/>
+                            buttonType="submit"
+                            disabled={!validation?.valid}
+                            icon={submitIcon ?? <IconCheck/>}
+                            label={submitLabel ?? t('common.ok')}
+                            variant={submitVariant ?? 'primary'}
+                        />
 						<IconButton
-							buttonType="button"
-							icon={cancelIcon ?? <IconX />}
-							label={cancelLabel ?? t('common.cancel')}
-							onClick={handleCancel}
-						/>
+                            buttonType="button"
+                            icon={cancelIcon ?? <IconX/>}
+                            label={cancelLabel ?? t('common.cancel')}
+                            onClick={handleCancel}
+                        />
 					</ButtonBar>
 				</form>
 			</CardButton>
 		</span>
-	);
+    );
 };

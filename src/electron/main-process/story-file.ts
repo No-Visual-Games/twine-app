@@ -6,18 +6,20 @@ import {
 	readFile,
 	rename,
 	stat,
-	writeFile
+	writeFile,
+	pathExists
 } from 'fs-extra';
-import {basename, join} from 'path';
+import path, {basename, join} from 'path';
 import {i18n} from './locales';
 import {storyDirectoryPath} from './story-directory';
 import {Story} from '../../store/stories/stories.types';
-import {storyFileName} from '../shared/story-filename';
+import {storyFileName, storySubDirectory} from '../shared/story-filename';
 import {
 	stopTrackingFile,
 	fileWasTouched,
 	wasFileChangedExternally
 } from './track-file-changes';
+import * as fs from "fs";
 
 export interface StoryFile {
 	htmlSource: string;
@@ -31,13 +33,12 @@ export interface StoryFile {
 export async function loadStories(saveDirectory?: string) {
 	const storyPath = !saveDirectory || !saveDirectory.length ? storyDirectoryPath() : saveDirectory;
 	const result: StoryFile[] = [];
-	const files = await readdir(storyPath);
+	const files = await readFilesRecursively(storyPath);
 
 	await Promise.all(
 		files
-			.filter(f => /\.html$/i.test(f))
-			.map(async f => {
-				const filePath = join(storyPath, f);
+			.filter(f => /(\.html|\.twine)$/i.test(f))
+			.map(async filePath => {
 				const stats = await stat(filePath);
 
 				if (!stats.isDirectory()) {
@@ -53,6 +54,32 @@ export async function loadStories(saveDirectory?: string) {
 	return result;
 }
 
+const readFilesRecursively = async (dir: string) : Promise<string[]> => {
+	try {
+		const files = await fs.promises.readdir(dir);
+		const filePaths = [];
+
+		for (const file of files) {
+			const filePath = path.join(dir, file);
+			const stat = await fs.promises.stat(filePath);
+
+			if (stat.isFile()) {
+				// It's a file, add it to the array
+				filePaths.push(filePath);
+			} else {
+				// It's a directory, recursively call the function and concatenate the returned file paths
+				const subDirectoryFiles = await readFilesRecursively(filePath);
+				filePaths.push(...subDirectoryFiles);
+			}
+		}
+
+		return filePaths;
+	} catch (error) {
+		console.error('Error reading directory:', error);
+		return [];
+	}
+}
+
 /**
  * Saves story HTML to the file system. This returns a promise that resolves
  * when complete.
@@ -66,7 +93,9 @@ export async function saveStoryHtml(story: Story, storyHtml: string, storyDirect
 		storyDirectory = storyDirectoryPath();
 	}
 	
-	const savedFilePath = join(storyDirectory, storyFileName(story));
+	const savedFilePath = join(storyDirectory, storySubDirectory(story), storyFileName(story, ".twine"));
+	const oldFilePath = join(storyDirectory, storyFileName(story, ".twine"));
+	const oldHtmlFilePath = join(storyDirectory, storyFileName(story));
 
 	console.log(`Saving ${savedFilePath}`);
 
@@ -102,6 +131,10 @@ export async function saveStoryHtml(story: Story, storyHtml: string, storyDirect
 		});
 		await fileWasTouched(savedFilePath);
 		console.log(`Successfully saved ${savedFilePath}`);
+		
+		// TODO Remove this when everything is migrated
+		deleteFile(oldFilePath);
+		deleteFile(oldHtmlFilePath);
 	} catch (e) {
 		console.error(`Error while saving ${savedFilePath}: ${e}`);
 		throw e;
@@ -114,16 +147,25 @@ export async function saveStoryHtml(story: Story, storyHtml: string, storyDirect
  */
 export async function deleteStory(story: Story) {
 	try {
-		const deletedFilePath = join(storyDirectoryPath(), storyFileName(story));
-
-		console.log(`Trashing ${deletedFilePath}`);
-		await shell.trashItem(deletedFilePath);
-		stopTrackingFile(deletedFilePath);
-		console.log(`Successfully trashed ${deletedFilePath}`);
+		const deletedFilePath = join(storyDirectoryPath(), storySubDirectory(story), storyFileName(story));
+		await deleteFile(deletedFilePath);
 	} catch (e) {
 		console.warn(`Error while deleting story: ${e}`);
 		throw e;
 	}
+}
+
+const deleteFile = async (path: string) : Promise<boolean> => {
+	if (!(await pathExists(path))) {
+		return false;
+	}
+
+	console.log(`Trashing ${path}`);
+	await shell.trashItem(path);
+	stopTrackingFile(path);
+	console.log(`Successfully trashed ${path}`);
+	
+	return true;
 }
 
 /**
@@ -133,8 +175,8 @@ export async function deleteStory(story: Story) {
 export async function renameStory(oldStory: Story, newStory: Story) {
 	try {
 		const storyPath = storyDirectoryPath();
-		const newStoryPath = join(storyPath, storyFileName(newStory));
-		const oldStoryPath = join(storyPath, storyFileName(oldStory));
+		const newStoryPath = join(storyPath, storySubDirectory(newStory), storyFileName(newStory));
+		const oldStoryPath = join(storyPath, storySubDirectory(oldStory), storyFileName(oldStory));
 
 		console.log(`Renaming ${oldStoryPath} to ${newStoryPath}`);
 		await rename(oldStoryPath, newStoryPath);

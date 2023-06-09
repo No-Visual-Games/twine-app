@@ -1,0 +1,9 @@
+@import '../../styles/colors.css';
+@import '../../styles/depth.css';
+@import '../../styles/metrics.css';
+@import '../../styles/typography.css';
+
+.prompt-button .card-content {
+    display: flex;
+    flex-direction: column;
+}

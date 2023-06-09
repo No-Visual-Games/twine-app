@@ -6,10 +6,15 @@ import {StoriesAction, StoriesState, Story} from '../stories.types';
 /**
  * Creates a new story with the default story format.
  */
+export interface CreateStoryProps {
+	gamePart?: string,
+	map?: string
+}
+
 export function createStory(
 	stories: Story[],
 	prefs: PrefsState,
-	props: Partial<Omit<Story, 'id'>> & Pick<Story, 'name'>
+	props: Partial<Omit<Story, 'id'>> & Pick<Story, 'name'> & CreateStoryProps
 ): Thunk<StoriesState, StoriesAction> {
 	const id = uuid();
 
