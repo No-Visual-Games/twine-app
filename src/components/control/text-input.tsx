@@ -3,6 +3,7 @@ import * as React from 'react';
 import './text-input.css';
 
 export interface TextInputProps {
+	name?: string,
 	children: React.ReactNode;
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	onInput?: (event: React.FormEvent<HTMLInputElement>) => void;
@@ -26,6 +27,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
 				<label>
 					<span className="text-input-label">{props.children}</span>
 					<input
+						name={props.name || "text"}
 						onChange={props.onChange}
 						onInput={props.onInput}
 						placeholder={props.placeholder}

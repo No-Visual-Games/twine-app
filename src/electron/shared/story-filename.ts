@@ -9,3 +9,14 @@ import {Story} from '../../store/stories/stories.types';
 export function storyFileName(story: Story, extension = '.html') {
 	return story.name.replace(/[^\w. -]/g, '_') + extension;
 }
+
+export function storySubDirectory(story: Story) {
+	const gamePartTag = story.tags.find(t => t.startsWith("part:"))
+	const mapTag = story.tags.find(t => t.startsWith("map:"))
+	
+	if (gamePartTag && mapTag) {
+		return `${gamePartTag.replace("part:", "")}/Dialogues/${mapTag.replace("map:", "")}`
+	}
+	
+	return "";
+}

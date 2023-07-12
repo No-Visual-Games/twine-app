@@ -19,10 +19,27 @@ export const CreateStoryButton: React.FC = () => {
 			stories.map(story => story.name)
 		)
 	);
+	const [gamePart, setGamePart] = React.useState<string | undefined>(undefined)
+	const [map, setMap] = React.useState<string | undefined>(undefined)
 	const history = useHistory();
 	const {prefs} = usePrefsContext();
 	const {t} = useTranslation();
 
+	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+		console.log("Changed", e.target.name)
+		if (e.target.name == "gamePart") {
+			setGamePart(e.target.value)
+			return
+		}
+
+		if (e.target.name == "map") {
+			setMap(e.target.value)
+			return
+		}
+
+		setNewName(e.target.value)
+	}
+	
 	function validateName(value: string) {
 		if (value.trim() === '') {
 			return {
@@ -44,7 +61,7 @@ export const CreateStoryButton: React.FC = () => {
 	}
 
 	function handleSubmit() {
-		const id = createStory(stories, prefs, {name: newName})(
+		const id = createStory(stories, prefs, {name: newName, gamePart, map})(
 			dispatch,
 			() => stories
 		);
@@ -58,11 +75,15 @@ export const CreateStoryButton: React.FC = () => {
 			label={t('common.new')}
 			submitLabel={t('common.create')}
 			submitVariant="create"
-			onChange={e => setNewName(e.target.value)}
+			onChange={handleChange}
 			onSubmit={handleSubmit}
 			prompt={t('routes.storyList.toolbar.createStoryButton.prompt')}
 			validate={validateName}
 			value={newName}
+			fields={[
+				{name: "gamePart", label: "Game Part", value: gamePart || ""},
+				{name: "map", label: "Map", value: map || ""},
+			]}
 		/>
 	);
 };

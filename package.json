@@ -1,6 +1,6 @@
 {
 	"name": "Twine",
-	"version": "2.6.2",
+	"version": "2.6.3",
 	"description": "a GUI for creating nonlinear stories",
 	"author": "Chris Klimas <chris@twinery.org>",
 	"license": "GPL-3.0",
@@ -108,7 +108,7 @@
 		"postbuild:web": "cpy --cwd dist/web --parents . ../../electron-build/renderer && cross-var tar -acf twine-$npm_package_version-web.zip dist/web",
 		"build:electron": "npm-run-all --parallel build:web build:electron-main --serial build:electron-bundle",
 		"build:electron-main": "tsc --project tsconfig.electron.json",
-		"build:electron-bundle": "electron-builder --config electron-builder.config.js --mac --windows --linux --publish=never",
+		"build:electron-bundle": "electron-builder --config electron-builder.config.js --windows --publish=never",
 		"clean": "rimraf dist electron-build",
 		"e2e": "playwright test",
 		"lint": "eslint src",
